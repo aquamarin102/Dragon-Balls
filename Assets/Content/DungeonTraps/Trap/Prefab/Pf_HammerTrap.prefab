@@ -93,6 +93,9 @@ GameObject:
   m_Component:
   - component: {fileID: 469414}
   - component: {fileID: 11144714}
+  - component: {fileID: 7855304656439138212}
+  - component: {fileID: 4623705671597853514}
+  - component: {fileID: 7336548586414176504}
   m_Layer: 0
   m_Name: Pf_HammerTrap
   m_TagString: Untagged
@@ -132,6 +135,47 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &7855304656439138212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e441ea73279ca7489feefbcb03ba052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 3
+  _expHit: 10
+--- !u!64 &4623705671597853514
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169414}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!65 &7336548586414176504
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169414}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 2}
+  m_Center: {x: 0, y: 3, z: 0}
 --- !u!1 &169416
 GameObject:
   m_ObjectHideFlags: 0

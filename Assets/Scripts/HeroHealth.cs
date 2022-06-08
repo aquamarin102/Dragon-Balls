@@ -9,7 +9,7 @@ namespace Quest
         private float _sliderValue;
         private void Awake()
         {
-            _curHealth = _maxHealth;
+            //_curHealth = _maxHealth;
         }
         
         private void Update()
@@ -28,12 +28,23 @@ namespace Quest
 
         private void Die()
         {
+            Camera.main.GetComponent<UIManager>().Lose();
             gameObject.SetActive(false);
         }
         
         private void OnGUI()
         {
             _sliderValue = GUI.HorizontalSlider(new Rect(25, 25, 300, 60), _sliderValue, 0, 1);
+        }
+        public void SetHealthAdjustment (int adjustmentAmount)
+        {
+            _curHealth += adjustmentAmount;
+
+            if (_curHealth > 10)
+            {
+                _curHealth = 10;
+            }
+            
         }
     }
 }
