@@ -7,9 +7,8 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private bool expiresImmediately;
     
     /// It is handy to keep a reference to the player that collected us
-    protected Hero _heroMove;
 
-    protected HeroHealth _heroHealth;
+    protected IUnit _unit;
 
     protected enum PowerUpState
     {
@@ -30,10 +29,11 @@ public class PowerUp : MonoBehaviour
         PowerUpCollected (other.gameObject);
     }
 
-    protected virtual void PowerUpCollected (GameObject gameObjectCollectingPowerUp)
+    protected void PowerUpCollected (GameObject gameObjectCollectingPowerUp)
     {
-        // We only care if we've been collected by the player
-        if (gameObjectCollectingPowerUp.tag != "Player")
+        _unit = gameObjectCollectingPowerUp.GetComponent<IUnit>();
+
+        if (_unit == null)
         {
             return;
         }
@@ -46,23 +46,13 @@ public class PowerUp : MonoBehaviour
         powerUpState = PowerUpState.IsCollected;
 
         // We must have been collected by a player, store handle to player for later use      
-        _heroMove = gameObjectCollectingPowerUp.GetComponent<Hero> ();
-        _heroHealth = gameObjectCollectingPowerUp.GetComponent<HeroHealth> ();
-
-        // We move the power up game object to be under the player that collect it, this isn't essential for functionality 
-        // presented so far, but it is neater in the gameObject hierarchy
-        gameObject.transform.parent = _heroMove.gameObject.transform;
-        gameObject.transform.position = _heroMove.gameObject.transform.position;
-
         // Payload      
         PowerUpPayload ();
         
         // Now the power up visuals can go away
         Destroy(gameObject);
     }
-
-
-
+    
     protected virtual void PowerUpPayload ()
     {
         Debug.Log ("Power Up collected, issuing payload for: " + gameObject.name);
@@ -74,7 +64,7 @@ public class PowerUp : MonoBehaviour
         }
     }
 
-    protected virtual void PowerUpHasExpired ()
+    protected  void PowerUpHasExpired ()
     {
         if (powerUpState == PowerUpState.IsExpiring)
         {
@@ -86,7 +76,7 @@ public class PowerUp : MonoBehaviour
         DestroySelfAfterDelay ();
     }
 
-    protected virtual void DestroySelfAfterDelay ()
+    protected  void DestroySelfAfterDelay ()
     {
         // Arbitrary delay of some seconds to allow particle, audio is all done
         // TODO could tighten this and inspect the sfx? Hard to know how many, as subclasses could have spawned their own

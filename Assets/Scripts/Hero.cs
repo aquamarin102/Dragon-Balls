@@ -1,36 +1,44 @@
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Quest
 {
-    public class Hero : MonoBehaviour
+    public class Hero : MonoBehaviour, IUnit
     {
         [SerializeField] private float _speed = 5f;
-        [SerializeField] private float _boostSpeed;
         [SerializeField] private float _jumpForce = 200f;
         [SerializeField] private GameObject _viewCamera;
+        [SerializeField] private float _maxHealth;
+        [SerializeField] private Text _scorePoinText;
         
-        private int _pickupCoin = 0;
+        protected IUnit _unit;
+        
+        private float _curHealth;
+        private float _sliderValue;
+        private int _pickupCoin;
         private int _scaleCoins;
-        private Rigidbody _rigidbody;
-        
         private float _deltaX, _deltaZ;
+        
+        private Rigidbody _rigidbody;
 
-        [SerializeField] private Text _coinsText;
         private const string _horizontal = "Horizontal";
         private const string  _vertical = "Vertical";
         private const string _jump = "Jump";
 
+        public static Action WinDelegate;
+        public static Action LoseDelegate;
+        public static Action GetDamage;
+        public static Action<int> ScoreCoins;
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _curHealth = _maxHealth;
         }
         
         private void FixedUpdate()
         {
-
+            //Move
             _deltaX = Input.GetAxis(_horizontal) * (_speed);
             _deltaZ = Input.GetAxis(_vertical) * (_speed);
 
@@ -40,6 +48,10 @@ namespace Quest
             {
                 _rigidbody.AddForce(Vector3.up*_jumpForce);
             }
+            
+            //Heath SLider
+            _sliderValue = (_curHealth/_maxHealth);
+            
             //camera
             if (_viewCamera != null) {
                 Vector3 direction = (Vector3.up*2+Vector3.back)*2;
@@ -54,30 +66,89 @@ namespace Quest
             }
         }
 
+        //Heath SLider
+        private void OnGUI()
+        {
+            _sliderValue = GUI.HorizontalSlider(new Rect(25, 25, 300, 60), _sliderValue, 0, 1);
+
+
+        }
+
+        //Pickup Coins
+
+
+        //Boost speed
+        public void SetSpeedBoostOn (float speedMultiplier)
+        {
+            _speed *= speedMultiplier;
+        }
+
+        // Heal
+        public void SetHealthAdjustment (float adjustmentAmount)
+        {
+            _curHealth += adjustmentAmount;
+
+            if (_curHealth > 10)
+            {
+                _curHealth = 10;
+            }
+            
+        }
+
+        // Take damage
+        public void Hit(float damage)
+        {
+            try
+            {
+                GetDamage?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            _curHealth-= damage;
+            if (_curHealth <= 0)
+            {
+                Die();
+            }
+        }
+
+        //Die
+        private void Die()
+        {
+            gameObject.SetActive(false);
+            
+            try
+            {
+                LoseDelegate?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            
-            if (other.gameObject.tag == "Coin")
+            GetCoin(other.gameObject);
+           
+        }
+
+        public void GetCoin(GameObject coin)
+        {
+            if (coin.tag == "Coin")
             {
                 _pickupCoin++;
-                _coinsText.text = _pickupCoin.ToString();
-                Destroy(other.gameObject);
+                _scorePoinText.text = _pickupCoin.ToString();
+                Destroy(coin.gameObject);
             }
 
             if (_pickupCoin == 5)
             {
-                Camera.main.GetComponent<UIManager>().Win();
+                WinDelegate?.Invoke();
             }
+        
         }
-
-        public void SetSpeedBoostOn (float speedMultiplier)
-        {
-            _boostSpeed = _speed;
-            _speed *= speedMultiplier;
-        }
-        public void SetSpeedBoostOff ()
-        {
-            _speed = _boostSpeed;
-        }
+        
     }
 }

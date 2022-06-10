@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Quest
@@ -13,7 +11,7 @@ namespace Quest
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent(out HeroHealth health))
+            if (collision.gameObject.TryGetComponent(out Hero health))
             {
                 health.Hit(damage);
             }
