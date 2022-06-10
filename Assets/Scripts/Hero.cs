@@ -12,8 +12,6 @@ namespace Quest
         [SerializeField] private float _maxHealth;
         [SerializeField] private Text _scorePoinText;
         
-        protected IUnit _unit;
-        
         private float _curHealth;
         private float _sliderValue;
         private int _pickupCoin;
@@ -29,7 +27,7 @@ namespace Quest
         public static Action WinDelegate;
         public static Action LoseDelegate;
         public static Action GetDamage;
-        public static Action<int> ScoreCoins;
+        
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
