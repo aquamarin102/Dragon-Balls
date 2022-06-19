@@ -46,7 +46,6 @@ namespace Quest
                 _rigidbody.AddForce(Vector3.up*_jumpForce);
             }
             
-            //Heath SLider
 
             //camera
             if (_viewCamera != null) {
@@ -73,13 +72,11 @@ namespace Quest
         public void SetHealthAdjustment (float adjustmentAmount)
         {
             _curHealth += adjustmentAmount;
-            OnHPChaged?.Invoke(_curHealth);
-
             if (_curHealth > 10)
             {
                 _curHealth = 10;
             }
-            
+            OnHPChaged?.Invoke(_curHealth);
         }
 
         // Take damage
