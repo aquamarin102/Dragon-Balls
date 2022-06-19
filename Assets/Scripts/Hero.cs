@@ -13,7 +13,6 @@ namespace Quest
         [SerializeField] private Text _scorePoinText;
         
         private float _curHealth;
-        private float _sliderValue;
         private int _pickupCoin;
         private int _scaleCoins;
         private float _deltaX, _deltaZ;
@@ -27,7 +26,7 @@ namespace Quest
         public static Action WinDelegate;
         public static Action LoseDelegate;
         public static Action GetDamage;
-        
+        public static Action<float> OnHPChaged;
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -48,8 +47,7 @@ namespace Quest
             }
             
             //Heath SLider
-            _sliderValue = (_curHealth/_maxHealth);
-            
+
             //camera
             if (_viewCamera != null) {
                 Vector3 direction = (Vector3.up*2+Vector3.back)*2;
@@ -63,17 +61,7 @@ namespace Quest
                 _viewCamera.transform.LookAt(transform.position);
             }
         }
-
-        //Heath SLider
-        private void OnGUI()
-        {
-            _sliderValue = GUI.HorizontalSlider(new Rect(25, 25, 300, 60), _sliderValue, 0, 1);
-
-
-        }
-
-        //Pickup Coins
-
+        
 
         //Boost speed
         public void SetSpeedBoostOn (float speedMultiplier)
@@ -85,6 +73,7 @@ namespace Quest
         public void SetHealthAdjustment (float adjustmentAmount)
         {
             _curHealth += adjustmentAmount;
+            OnHPChaged?.Invoke(_curHealth);
 
             if (_curHealth > 10)
             {
@@ -105,6 +94,7 @@ namespace Quest
                 Debug.LogError(e);
             }
             _curHealth-= damage;
+            OnHPChaged?.Invoke(_curHealth);
             if (_curHealth <= 0)
             {
                 Die();
