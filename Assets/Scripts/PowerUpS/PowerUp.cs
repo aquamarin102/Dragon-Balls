@@ -1,4 +1,3 @@
-using Quest;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour

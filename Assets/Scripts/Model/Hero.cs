@@ -2,31 +2,32 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Quest
-{
     public class Hero : MonoBehaviour, IUnit
     {
         [SerializeField] private float _speed = 5f;
         [SerializeField] private float _jumpForce = 200f;
-        [SerializeField] private GameObject _viewCamera;
         [SerializeField] private float _maxHealth;
+        [SerializeField] private int _coinForWin = 5
+            ;
+        [SerializeField] private GameObject _viewCamera;
         [SerializeField] private Text _scorePoinText;
         
         private float _curHealth;
+        private float _deltaX, _deltaZ;
         private int _pickupCoin;
         private int _scaleCoins;
-        private float _deltaX, _deltaZ;
-        
+
         private Rigidbody _rigidbody;
 
         private const string _horizontal = "Horizontal";
         private const string  _vertical = "Vertical";
         private const string _jump = "Jump";
-
+        private const string _coinTag = "Coin";
+        
         public static Action WinDelegate;
         public static Action LoseDelegate;
         public static Action GetDamage;
-        public static Action<float> OnHPChaged;
+        public static Action<float, float> OnHPChaged;
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -72,11 +73,11 @@ namespace Quest
         public void SetHealthAdjustment (float adjustmentAmount)
         {
             _curHealth += adjustmentAmount;
-            if (_curHealth > 10)
+            if (_curHealth > _maxHealth)
             {
-                _curHealth = 10;
+                _curHealth = _maxHealth;
             }
-            OnHPChaged?.Invoke(_curHealth);
+            OnHPChaged?.Invoke(_curHealth, _maxHealth);
         }
 
         // Take damage
@@ -91,7 +92,7 @@ namespace Quest
                 Debug.LogError(e);
             }
             _curHealth-= damage;
-            OnHPChaged?.Invoke(_curHealth);
+            OnHPChaged?.Invoke(_curHealth, _maxHealth);
             if (_curHealth <= 0)
             {
                 Die();
@@ -121,14 +122,14 @@ namespace Quest
 
         public void GetCoin(GameObject coin)
         {
-            if (coin.tag == "Coin")
+            if (coin.tag == _coinTag)
             {
                 _pickupCoin++;
                 _scorePoinText.text = _pickupCoin.ToString();
                 Destroy(coin.gameObject);
             }
 
-            if (_pickupCoin == 5)
+            if (_pickupCoin == _coinForWin)
             {
                 WinDelegate?.Invoke();
             }
@@ -136,4 +137,3 @@ namespace Quest
         }
         
     }
-}

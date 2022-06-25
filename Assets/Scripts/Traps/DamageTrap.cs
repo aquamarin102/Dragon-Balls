@@ -1,9 +1,5 @@
 using UnityEngine;
 
-namespace Quest
-{
-
-
     public class DamageTrap : MonoBehaviour
     {
         [SerializeField] private float damage = 3f;
@@ -11,7 +7,7 @@ namespace Quest
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent(out Hero health))
+            if (collision.gameObject.TryGetComponent(out IUnit health))
             {
                 health.Hit(damage);
             }
@@ -24,4 +20,4 @@ namespace Quest
             
         }
     }
-}
+
