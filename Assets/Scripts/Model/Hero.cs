@@ -1,16 +1,18 @@
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
     public class Hero : MonoBehaviour, IUnit
     {
-        [SerializeField] private float _speed = 5f;
-        [SerializeField] private float _jumpForce = 200f;
+        [SerializeField, Range(1f, 20f), Tooltip("Hero speed")] private float _speed = 5f;
+        [SerializeField, Range(100f, 400f), Tooltip("Jump force")] private float _jumpForce = 200f;
         [SerializeField] private float _maxHealth;
-        [SerializeField] private int _coinForWin = 5
+        [SerializeField, Range(1f, 5f)] private int _coinForWin = 5
             ;
         [SerializeField] private GameObject _viewCamera;
         [SerializeField] private Text _scorePoinText;
+        [SerializeField]private GameObject _gameObject;
         
         private float _curHealth;
         private float _deltaX, _deltaZ;
@@ -28,8 +30,19 @@ using UnityEngine.UI;
         public static Action LoseDelegate;
         public static Action GetDamage;
         public static Action<float, float> OnHPChaged;
+        
+        private SerializableXMLData<SaveData> _serializableXMLData = new SerializableXMLData<SaveData>();
+        private SaveData _saveData = new SaveData() { Name = "Bonus", Position = new Vector3(0,0,0) };
+        
         private void Start()
         {
+            _saveData.Position = new Vector3(_gameObject.transform.position.x, _gameObject.transform.position.y,
+                _gameObject.transform.position.z);
+            var path = Path.Combine(Application.streamingAssetsPath, "SerializableXMLSave.xml");
+            _serializableXMLData.Save(_saveData, path);
+            var save = _serializableXMLData.Load(path);
+            Debug.Log(save);
+            
             _rigidbody = GetComponent<Rigidbody>();
             _curHealth = _maxHealth;
         }

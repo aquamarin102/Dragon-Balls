@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    [Tooltip ("Tick true for power ups that are instant use, eg a health addition that has no delay before expiring")]
-    [SerializeField] private bool expiresImmediately;
+    [SerializeField, Tooltip ("Tick true for power ups that are instant use, eg a health addition that has no delay before expiring")] 
+    private bool expiresImmediately;
     
     /// It is handy to keep a reference to the player that collected us
 
+    
     protected IUnit _unit;
 
     protected enum PowerUpState

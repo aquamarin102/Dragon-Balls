@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerUpHeal : PowerUp
 {
-    [SerializeField] private float _healthBonus = 20;
+    [SerializeField, Range(1f, 10f)] private float _healthBonus = 3f;
 
     protected override void PowerUpPayload()  // Пункт 1 контрольного списка
     {

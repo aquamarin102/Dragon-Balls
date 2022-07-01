@@ -11,7 +11,7 @@ public class Task2 : MonoBehaviour
         SearchSymbol(text,_searchableSymbol);
     }
 
-    public void SearchSymbol(string text, string searchableSymbol)
+    public static void SearchSymbol(string text, string searchableSymbol)
     {
         int count = text.ToCharArray().Where(c => c == searchableSymbol[0]).Count();
 
