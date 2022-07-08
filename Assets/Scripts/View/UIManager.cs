@@ -14,16 +14,19 @@ using UnityEngine.SceneManagement;
 
         public void Win()
         {
+            Time.timeScale = 0;
             _panelWin.SetActive(true);
         }
 
         public void Lose()
         {
+            Time.timeScale = 0;
             _panelLose.SetActive(true);
         }
 
         public void Restart()
         {
+            Time.timeScale = 1;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
         }

@@ -8,8 +8,7 @@ using UnityEngine.UI;
         [SerializeField, Range(1f, 20f), Tooltip("Hero speed")] private float _speed = 5f;
         [SerializeField, Range(100f, 400f), Tooltip("Jump force")] private float _jumpForce = 200f;
         [SerializeField] private float _maxHealth;
-        [SerializeField, Range(1f, 5f)] private int _coinForWin = 5
-            ;
+        [SerializeField, Range(1f, 5f)] private int _coinForWin = 5;
         [SerializeField] private GameObject _viewCamera;
         [SerializeField] private Text _scorePoinText;
         [SerializeField]private GameObject _gameObject;
@@ -18,6 +17,7 @@ using UnityEngine.UI;
         private float _deltaX, _deltaZ;
         private int _pickupCoin;
         private int _scaleCoins;
+        private int _numberWins;
 
         private Rigidbody _rigidbody;
 
@@ -32,8 +32,8 @@ using UnityEngine.UI;
         public static Action<float, float> OnHPChaged;
         
         private SerializableXMLData<SaveData> _serializableXMLData = new SerializableXMLData<SaveData>();
-        private SaveData _saveData = new SaveData() { Name = "Bonus", Position = new Vector3(0,0,0) };
-        
+        private SaveData _saveData = new SaveData() { Name = "Bonus", Position = new Vector3(0,0,0), NumberOfWins = 0};
+
         private void Start()
         {
             _saveData.Position = new Vector3(_gameObject.transform.position.x, _gameObject.transform.position.y,
@@ -45,6 +45,7 @@ using UnityEngine.UI;
             
             _rigidbody = GetComponent<Rigidbody>();
             _curHealth = _maxHealth;
+
         }
         
         private void FixedUpdate()
@@ -144,6 +145,14 @@ using UnityEngine.UI;
 
             if (_pickupCoin == _coinForWin)
             {
+                _numberWins++;
+                _saveData.NumberOfWins = _numberWins;
+                _saveData.Position = new Vector3(_gameObject.transform.position.x, _gameObject.transform.position.y,
+                    _gameObject.transform.position.z);
+                var path = Path.Combine(Application.streamingAssetsPath, "SerializableXMLSave.xml");
+                _serializableXMLData.Save(_saveData, path);
+                var save = _serializableXMLData.Load(path);
+                Debug.Log(save);
                 WinDelegate?.Invoke();
             }
         

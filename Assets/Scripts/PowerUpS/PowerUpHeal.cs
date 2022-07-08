@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PowerUpHeal : PowerUp
+public  class PowerUpHeal : PowerUp
 {
     [SerializeField, Range(1f, 10f)] private float _healthBonus = 3f;
 
