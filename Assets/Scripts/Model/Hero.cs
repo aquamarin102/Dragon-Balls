@@ -39,7 +39,6 @@ using UnityEngine.UI;
             _saveData.Position = new Vector3(_gameObject.transform.position.x, _gameObject.transform.position.y,
                 _gameObject.transform.position.z);
             var path = Path.Combine(Application.streamingAssetsPath, "SerializableXMLSave.xml");
-            _serializableXMLData.Save(_saveData, path);
             var save = _serializableXMLData.Load(path);
             Debug.Log(save);
             
